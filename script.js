@@ -223,25 +223,26 @@ if (loadBtn) {
                 return response.json();
             })
             .then(function(data) {
-                let added = 0;
+                console.log("Получены данные:", data); // Проверка в консоли
+                
                 for (let i = 0; i < data.length; i++) {
-                    let newId = getNewId(items);
+                    let newId = items.length + 1 + i; // простой способ дать новый id
                     let newItem = {
                         id: newId,
-                        title: data[i].title.substring(0, 40),
-                        value: data[i].id * 100,
+                        title: "Загружено: " + data[i].title.substring(0, 30),
+                        value: Math.floor(Math.random() * 1000) + 100, // случайное число
                         status: "new",
                         createdAt: new Date().toISOString().slice(0, 10)
                     };
                     items.push(newItem);
-                    added++;
                 }
+                
                 renderList(items);
-                messageEl.textContent = "✅ Загружено " + added + " записей";
+                messageEl.textContent = "✅ Загружено " + data.length + " новых записей!";
             })
             .catch(function(error) {
-                messageEl.textContent = "❌ Ошибка загрузки";
-                console.log(error);
+                console.log("Ошибка:", error);
+                messageEl.textContent = "❌ Ошибка загрузки.";
             });
     };
 }
