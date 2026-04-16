@@ -50,7 +50,6 @@ function renderList(itemsToRender) {
         card.appendChild(h3);
         card.appendChild(info);
         card.appendChild(btnRemove);
-        
         listEl.appendChild(card);
     }
 }
@@ -170,3 +169,79 @@ console.log("D2. Статистика testItems:", statsTest);
 // ========== ЗАПУСК ==========
 renderList(items);
 console.log("script.js загружен, страница готова");
+
+// ==================== ЛР4: ЗАДАНИЯ ДЛЯ ЗАКРЕПЛЕНИЯ (БЛОКИ A-F) ====================
+// Этот блок выполнен в рамках ЛР4 для демонстрации понимания теории
+
+const form = document.getElementById("recordForm");
+const titleInput = document.getElementById("titleInput");
+const valueInput = document.getElementById("valueInput");
+const dateInput = document.getElementById("createdAtInput");
+const statusSelect = document.getElementById("statusInput");
+const errorsDiv = document.getElementById("formErrors");
+const loadBtn = document.getElementById("btnLoadExternal");
+
+// Добавление записи
+if (form) {
+    form.onsubmit = function(e) {
+        e.preventDefault();
+        
+        let errors = validateForm(titleInput.value, valueInput.value, dateInput.value);
+        
+        if (errors.length > 0) {
+            let txt = "";
+            for (let i = 0; i < errors.length; i++) {
+                txt = txt + "❌ " + errors[i] + "<br>";
+            }
+            errorsDiv.innerHTML = txt;
+            messageEl.textContent = "Исправьте ошибки";
+        } else {
+            let newId = getNewId(items);
+            let newItem = {
+                id: newId,
+                title: normalizeSpaces(titleInput.value),
+                value: Number(valueInput.value),
+                status: statusSelect.value,
+                createdAt: dateInput.value
+            };
+            items.push(newItem);
+            renderList(items);
+            form.reset();
+            errorsDiv.innerHTML = "";
+            messageEl.textContent = "✅ Добавлено: " + newItem.title;
+        }
+    };
+}
+
+// Загрузка из API
+if (loadBtn) {
+    loadBtn.onclick = function() {
+        messageEl.textContent = "Загрузка...";
+        
+        fetch("https://jsonplaceholder.typicode.com/posts?_limit=3")
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                let added = 0;
+                for (let i = 0; i < data.length; i++) {
+                    let newId = getNewId(items);
+                    let newItem = {
+                        id: newId,
+                        title: data[i].title.substring(0, 40),
+                        value: data[i].id * 100,
+                        status: "new",
+                        createdAt: new Date().toISOString().slice(0, 10)
+                    };
+                    items.push(newItem);
+                    added++;
+                }
+                renderList(items);
+                messageEl.textContent = "✅ Загружено " + added + " записей";
+            })
+            .catch(function(error) {
+                messageEl.textContent = "❌ Ошибка загрузки";
+                console.log(error);
+            });
+    };
+}

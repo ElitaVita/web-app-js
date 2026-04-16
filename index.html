@@ -30,7 +30,26 @@
 
             <div id="message" style="margin: 15px 0; padding: 10px; background: #e8f4f8; border-radius: 5px;"></div>
 
-            <div id="demoList"></div>
+            <div id="demolist"></div>
+
+<!-- ========== ЛР4: ФОРМА ДОБАВЛЕНИЯ ========== -->
+<h3>➕ Добавить нового посетителя</h3>
+<form id="recordForm">
+    <input type="text" id="titleInput" placeholder="ФИО посетителя" style="margin: 5px; padding: 8px;" />
+    <input type="number" id="valueInput" placeholder="Сумма (value)" style="margin: 5px; padding: 8px;" />
+    <input type="text" id="createdAtInput" placeholder="Дата (ГГГГ-ММ-ДД)" style="margin: 5px; padding: 8px;" />
+    <select id="statusInput" style="margin: 5px; padding: 8px;">
+        <option value="new">new</option>
+        <option value="done">done</option>
+    </select>
+    <button type="submit" style="margin: 5px; padding: 8px;">Сохранить</button>
+</form>
+
+<!-- Блок для ошибок формы -->
+<div id="formErrors" style="color: red; margin: 10px 0; padding: 10px; background: #ffeeee; border-radius: 5px;"></div>
+
+<!-- Кнопка загрузки из внешнего API -->
+<button id="btnLoadExternal" style="margin: 10px 0; padding: 8px 16px;">📥 Загрузить данные из внешнего сервиса</button>
 
             <div id="list"></div>
         </section>
