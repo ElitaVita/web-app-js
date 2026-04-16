@@ -246,3 +246,62 @@ if (loadBtn) {
             });
     };
 }
+
+// ==================== БЛОК E и F ====================
+
+function delay(ms) {
+    return new Promise(function(resolve) {
+        setTimeout(resolve, ms);
+    });
+}
+
+async function testDelay() {
+    console.log("E1. Начинаем ожидание...");
+    await delay(500);
+    console.log("E1. done");
+}
+testDelay();
+
+async function safeFetchJson(url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("HTTP ошибка: " + response.status);
+        const data = await response.json();
+        return { ok: true, data: data };
+    } catch (error) {
+        return { ok: false, error: error.message };
+    }
+}
+
+async function testSafeFetch() {
+    const result = await safeFetchJson("https://jsonplaceholder.typicode.com/posts/1");
+    console.log("E2. safeFetchJson (успех):", result.ok);
+    
+    const badResult = await safeFetchJson("https://jsonplaceholder.typicode.com/unknown");
+    console.log("E2. safeFetchJson (ошибка):", badResult.ok, badResult.error);
+}
+testSafeFetch();
+
+function tryParseJson(text) {
+    try {
+        const data = JSON.parse(text);
+        return { ok: true, data: data };
+    } catch (error) {
+        return { ok: false, error: error.message };
+    }
+}
+console.log("F1. tryParseJson('{\"a\":1}'):", tryParseJson('{"a":1}'));
+console.log("F1. tryParseJson('{a:1}'):", tryParseJson('{a:1}'));
+
+function normalizeApiValue(x) {
+    if (typeof x === "number") return x;
+    if (typeof x === "string") {
+        const num = Number(x);
+        if (!isNaN(num)) return num;
+    }
+    return 0;
+}
+console.log("F2. normalizeApiValue(10):", normalizeApiValue(10));
+console.log("F2. normalizeApiValue('20'):", normalizeApiValue("20"));
+console.log("F2. normalizeApiValue(null):", normalizeApiValue(null));
+console.log("F2. normalizeApiValue('abc'):", normalizeApiValue("abc"));
